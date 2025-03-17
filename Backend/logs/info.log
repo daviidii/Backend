@@ -1,0 +1,34 @@
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"error","message":"SyntaxError: Expected property name or '}' in JSON at position 4\n    at JSON.parse (<anonymous>)\n    at parse (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\types\\json.js:92:19)\n    at D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n    at invokeCallback (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:238:16)\n    at done (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:227:7)\n    at IncomingMessage.onEnd (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:287:7)\n    at IncomingMessage.emit (node:events:519:28)\n    at endReadableNT (node:internal/streams/readable:1696:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)"}
+{"level":"error","message":"SyntaxError: Expected property name or '}' in JSON at position 4\n    at JSON.parse (<anonymous>)\n    at parse (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\types\\json.js:92:19)\n    at D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n    at invokeCallback (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:238:16)\n    at done (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:227:7)\n    at IncomingMessage.onEnd (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:287:7)\n    at IncomingMessage.emit (node:events:519:28)\n    at endReadableNT (node:internal/streams/readable:1696:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"error","message":"SyntaxError: Expected ',' or '}' after property value in JSON at position 64\n    at JSON.parse (<anonymous>)\n    at parse (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\types\\json.js:92:19)\n    at D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n    at invokeCallback (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:238:16)\n    at done (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:227:7)\n    at IncomingMessage.onEnd (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:287:7)\n    at IncomingMessage.emit (node:events:519:28)\n    at endReadableNT (node:internal/streams/readable:1696:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)"}
+{"level":"error","message":"SyntaxError: Expected ',' or '}' after property value in JSON at position 75\n    at JSON.parse (<anonymous>)\n    at parse (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\types\\json.js:92:19)\n    at D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\body-parser\\lib\\read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:206:9)\n    at invokeCallback (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:238:16)\n    at done (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:227:7)\n    at IncomingMessage.onEnd (D:\\Personal\\vue-practice\\vue-coursework\\coursework-5\\Backend\\node_modules\\raw-body\\index.js:287:7)\n    at IncomingMessage.emit (node:events:519:28)\n    at endReadableNT (node:internal/streams/readable:1696:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Database initialized successfully"}
+{"level":"info","message":"Server running on port 5000"}

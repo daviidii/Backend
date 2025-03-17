@@ -1,0 +1,252 @@
+<script setup lang="ts" generic="TValue">
+import {
+  FlexRender,
+  getCoreRowModel,
+  useVueTable,
+  type ColumnDef,
+} from "@tanstack/vue-table";
+import { formatDate } from "@vueuse/core";
+import { useToast } from "../ui/toast";
+import type { TaskProps } from "~/types/types";
+
+const props = defineProps<{
+  columns: ColumnDef<TaskProps, TValue>[];
+  data: TaskProps[];
+}>();
+
+const { toast } = useToast();
+
+const isLoading = ref<boolean>(false);
+const editedRowId = ref<number | null>(null);
+
+const emit = defineEmits<{
+  (event: "deleteRow", rowId: number): void;
+  (event: "addRow", newTask: TaskProps): void;
+}>();
+
+const table = useVueTable({
+  get data() {
+    return props.data;
+  },
+  get columns() {
+    return props.columns;
+  },
+  getCoreRowModel: getCoreRowModel(),
+  meta: {
+    isLoading,
+    editedRowId,
+    addRow: async () => {
+      const newTask: Partial<TaskProps> = {
+        title: "New task",
+        description: "",
+        status: "Pending",
+        due_date: null,
+      };
+      try {
+        const data = await $fetch<TaskProps>("http://localhost:5000/duran", {
+          method: "post",
+          body: newTask,
+        });
+
+        emit("addRow", data);
+      } catch (error: any) {
+        const errMessage = error.data
+          ? error.data.error
+          : "something went wrong";
+        console.error("error >>>", errMessage);
+        toast({
+          title: `Failed to add new task`,
+          description: h("div", { class: "space-y-1 text-foreground" }, [
+            h("p", { class: "text-sm" }, `${errMessage}`),
+            h(
+              "p",
+              {},
+              `${formatDate(new Date(), "dddd, MMMM DD, YYYY - h:mm:ss a")}`
+            ),
+          ]),
+          variant: "destructive",
+        });
+      }
+    },
+    updateData: async (row: any, columnId: number, value: any) => {
+      if (value === row.original[columnId]) {
+        console.log("no changes");
+        return;
+      }
+
+      isLoading.value = true;
+      editedRowId.value = row.index;
+
+      try {
+        await useFetch(`http://localhost:5000/duran/${row.original._id}`, {
+          method: "PUT",
+          body: {
+            [columnId]: value,
+          },
+        });
+
+        row.original[columnId] = value;
+
+        setTimeout(() => {
+          toast({
+            title: `${row.original.title} ${columnId} has been updated`,
+            description: `${formatDate(
+              new Date(),
+              "dddd, MMMM DD, YYYY - h:mm:ss a"
+            )}`,
+            class: "bg-green-600",
+          });
+        }, 1000);
+      } catch (error: any) {
+        const errMessage = error.data
+          ? error.data.error
+          : "something went wrong";
+        console.error("error >>>", errMessage);
+        toast({
+          title: `Failed to update ${columnId} of ${row.original.title} `,
+          description: h("div", { class: "space-y-1 text-foreground" }, [
+            h("p", { class: "text-sm" }, `${errMessage}`),
+            h(
+              "p",
+              {},
+              `${formatDate(new Date(), "dddd, MMMM DD, YYYY - h:mm:ss a")}`
+            ),
+          ]),
+          variant: "destructive",
+        });
+      } finally {
+        setTimeout(() => {
+          isLoading.value = false;
+          editedRowId.value = null;
+        }, 1000);
+      }
+    },
+
+    deleteRow: async (row: any) => {
+      if (!row.original._id) return;
+
+      isLoading.value = true;
+      editedRowId.value = row.index;
+
+      try {
+        const rowId = row.original._id;
+
+        if (rowId) {
+          await $fetch(`http://localhost:5000/duran/${rowId}`, {
+            method: "delete",
+          });
+
+          emit("deleteRow", rowId);
+
+          setTimeout(() => {
+            toast({
+              title: `${row.original.title} has been deleted`,
+              description: `${formatDate(
+                new Date(),
+                "dddd, MMMM DD, YYYY - h:mm:ss a"
+              )}`,
+              class: "bg-green-600",
+            });
+          }, 1000);
+        }
+      } catch (error: any) {
+        const errMessage = error.data
+          ? error.data.error
+          : "something went wrong";
+        console.error("error >>>", errMessage);
+        toast({
+          title: `Failed to delete ${row.original.title}`,
+          description: h("div", { class: "space-y-1 text-foreground" }, [
+            h("p", { class: "text-sm" }, `${errMessage}`),
+            h(
+              "p",
+              {},
+              `${formatDate(new Date(), "dddd, MMMM DD, YYYY - h:mm:ss a")}`
+            ),
+          ]),
+          variant: "destructive",
+        });
+      } finally {
+        setTimeout(() => {
+          isLoading.value = false;
+          editedRowId.value = null;
+        }, 1000);
+      }
+    },
+  },
+});
+</script>
+
+<template>
+  <div
+    class="border rounded-lg overflow-hidden"
+    :class="[isLoading ? '!cursor-wait' : '']"
+  >
+    <Table>
+      <TableHeader>
+        <TableRow
+          class="m-0 p-0 even:bg-muted"
+          v-for="headerGroup in table.getHeaderGroups()"
+          :key="headerGroup.id"
+        >
+          <TableHead
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            class="px-4 py-3 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right"
+            :class="[
+              header.column.id === 'title'
+                ? 'w-64'
+                : header.column.id === 'description'
+                ? 'w-[600px]'
+                : '',
+            ]"
+          >
+            <FlexRender
+              v-if="!header.isPlaceholder"
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            />
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody :class="[isLoading ? 'pointer-events-none' : '']">
+        <template v-if="table.getRowModel().rows?.length">
+          <TableRow
+            v-for="row in table.getRowModel().rows"
+            :key="row.original._id"
+            :data-state="row.getIsSelected() ? 'selected' : undefined"
+            class="m-0 border-t p-0 even:bg-muted/20"
+            :class="[
+              editedRowId === row.index ? 'animate-pulse bg-accent/40' : '',
+            ]"
+          >
+            <TableCell
+              v-for="cell in row.getVisibleCells()"
+              :key="cell.id"
+              class="px-4 py-4 text-left [&[align=center]]:text-center [&[align=right]]:text-right"
+            >
+              <FlexRender
+                :render="cell.column.columnDef.cell"
+                :props="cell.getContext()"
+              />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else>
+          <TableRow>
+            <TableCell :colspan="columns.length" class="h-14 text-center">
+              No results.
+            </TableCell>
+          </TableRow>
+        </template>
+      </TableBody>
+      <TableFooter class="text-center bg-background hover:bg-background">
+        <TableRow class="hover:bg-transparent">
+          <TableCell :colspan="columns.length">
+            <DataTableAddRow :table="table" />
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  </div>
+</template>
