@@ -31,6 +31,7 @@ const columnFilters = ref<ColumnFiltersState>([]);
 const emit = defineEmits<{
   (event: "deleteRow", rowId: number): void;
   (event: "addRow", newTask: TaskProps): void;
+  (event: "updateRow", data: TaskProps[]): void;
 }>();
 
 const table = useVueTable({
@@ -91,9 +92,8 @@ const table = useVueTable({
         });
       }
     },
-    updateData: async (row: any, columnId: number, value: any) => {
+    updateData: async (row: any, columnId: string, value: any) => {
       if (value === row.original[columnId]) {
-        console.log("no changes");
         return;
       }
 
@@ -101,18 +101,28 @@ const table = useVueTable({
       editedRowId.value = row.index;
 
       try {
-        await useFetch(`http://localhost:5000/duran/${row.original._id}`, {
+        await $fetch(`http://localhost:5000/duran/${row.original._id}`, {
           method: "PUT",
           body: {
             [columnId]: value,
           },
         });
 
-        row.original[columnId] = value;
+        // Create a new object for the updated task
+        const updatedTask = { ...row.original, [columnId]: value };
+
+        const updatedData = props.data.map((task) =>
+          task._id === updatedTask._id ? updatedTask : task
+        );
+
+        emit("updateRow", updatedData);
 
         setTimeout(() => {
           toast({
-            title: `${row.original.title} ${columnId} has been updated`,
+            title: `${row.original.title} ${columnId.replaceAll(
+              "_",
+              " "
+            )} has been updated`,
             description: `${formatDate(
               new Date(),
               "dddd, MMMM DD, YYYY - h:mm:ss a"
@@ -198,6 +208,22 @@ const table = useVueTable({
     },
   },
 });
+
+watch(
+  () => props.data,
+  (newData, oldData) => {
+    // Check if any individual element has changed
+    const hasChanged = newData.some((task, index) => task !== oldData[index]);
+
+    if (hasChanged) {
+      // Reset sorting to ensure the table is re-sorted
+
+      table.resetSorting();
+      table.setSorting(sorting.value);
+    }
+  },
+  { deep: true } // Enable deep watching
+);
 </script>
 
 <template>
@@ -209,7 +235,7 @@ const table = useVueTable({
       <h2
         class="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0"
       >
-        Todo tracker
+        Todo
       </h2>
       <Input
         class="max-w-sm"

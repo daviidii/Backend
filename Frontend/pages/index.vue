@@ -16,6 +16,10 @@ const handleDeleteRow = (rowId: number) => {
 const handleAddRow = (newTask: TaskProps) => {
   data.value = [...data.value, newTask];
 };
+
+const handleUpdate = (updatedData: TaskProps[]) => {
+  data.value = updatedData;
+};
 </script>
 <template>
   <Toaster />
@@ -26,6 +30,7 @@ const handleAddRow = (newTask: TaskProps) => {
         :data="data"
         @delete-row="handleDeleteRow"
         @add-row="handleAddRow"
+        @update-row="handleUpdate"
       />
     </div>
   </div>

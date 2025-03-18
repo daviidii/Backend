@@ -38,14 +38,14 @@ const handlePopoverState = (open: boolean) => {
     if (isLoading.value) return;
     const updatedValue = value.value;
     if (updatedValue) {
-      const oldValue = new Date(props.row.original.due_date).getTime();
-      const newValue = updatedValue.toDate(getLocalTimeZone()).getTime();
+      const oldValue = new Date(props.row.original.due_date);
+      const newValue = updatedValue.toDate(getLocalTimeZone());
 
       if (newValue !== oldValue) {
         props.table.options.meta?.updateData(
           props.row,
           props.column.id,
-          newValue
+          newValue.toISOString()
         );
       }
     }
