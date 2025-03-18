@@ -2,12 +2,18 @@
 import {
   FlexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
   useVueTable,
+  type SortingState,
+  type ColumnFiltersState,
   type ColumnDef,
 } from "@tanstack/vue-table";
 import { formatDate } from "@vueuse/core";
 import { useToast } from "../ui/toast";
 import type { TaskProps } from "~/types/types";
+
+import { valueUpdater } from "~/lib/utils";
 
 const props = defineProps<{
   columns: ColumnDef<TaskProps, TValue>[];
@@ -18,6 +24,9 @@ const { toast } = useToast();
 
 const isLoading = ref<boolean>(false);
 const editedRowId = ref<number | null>(null);
+
+const sorting = ref<SortingState>([]);
+const columnFilters = ref<ColumnFiltersState>([]);
 
 const emit = defineEmits<{
   (event: "deleteRow", rowId: number): void;
@@ -32,6 +41,20 @@ const table = useVueTable({
     return props.columns;
   },
   getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
+  onColumnFiltersChange: (updaterOrValue) =>
+    valueUpdater(updaterOrValue, columnFilters),
+  getFilteredRowModel: getFilteredRowModel(),
+  state: {
+    get sorting() {
+      return sorting.value;
+    },
+    get columnFilters() {
+      return columnFilters.value;
+    },
+  },
+
   meta: {
     isLoading,
     editedRowId,
@@ -182,6 +205,14 @@ const table = useVueTable({
     class="border rounded-lg overflow-hidden"
     :class="[isLoading ? '!cursor-wait' : '']"
   >
+    <div class="flex items-center px-3 py-4 border-b">
+      <Input
+        class="max-w-sm"
+        placeholder="Filter titles"
+        :model-value="table.getColumn('title')?.getFilterValue() as string"
+        @update:model-value="table.getColumn('title')?.setFilterValue($event)"
+      />
+    </div>
     <Table>
       <TableHeader>
         <TableRow

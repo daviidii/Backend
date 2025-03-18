@@ -7,11 +7,34 @@ import {
 import type { ColumnDef } from "@tanstack/vue-table";
 import { h } from "vue";
 import type { TaskProps, StatusType, ButtonVariants } from "~/types/types";
+import Button from "./ui/button/Button.vue";
+import { ArrowUpDown } from "lucide-vue-next";
+
+// Custom sorting function for dates
+const dateSortingFn = (rowA: any, rowB: any, columnId: string): number => {
+  const dateA = rowA.getValue(columnId) as Date | null;
+  const dateB = rowB.getValue(columnId) as Date | null;
+
+  if (dateA === null && dateB === null) return 0;
+  if (dateA === null) return 1; // Null values go to the end
+  if (dateB === null) return -1; // Null values go to the end
+
+  return dateA.getTime() - dateB.getTime();
+};
 
 export const taskColumns: ColumnDef<TaskProps>[] = [
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      return h(
+        Button,
+        {
+          variant: "ghost",
+          onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+        },
+        () => ["Title", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+      );
+    },
     size: 100,
     id: "title",
     cell: (props) => {
@@ -59,7 +82,16 @@ export const taskColumns: ColumnDef<TaskProps>[] = [
   },
   {
     accessorKey: "due_date",
-    header: "Due Date",
+    header: ({ column }) => {
+      return h(
+        Button,
+        {
+          variant: "ghost",
+          onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+        },
+        () => ["Due date", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+      );
+    },
     id: "due_date",
     size: 300,
     cell: (props) => {
@@ -70,6 +102,7 @@ export const taskColumns: ColumnDef<TaskProps>[] = [
         row: props.row,
       });
     },
+    sortingFn: dateSortingFn,
   },
   {
     id: "actions",
