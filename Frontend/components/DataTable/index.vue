@@ -205,7 +205,12 @@ const table = useVueTable({
     class="border rounded-lg overflow-hidden"
     :class="[isLoading ? '!cursor-wait' : '']"
   >
-    <div class="flex items-center px-3 py-4 border-b">
+    <div class="flex items-center justify-between px-5 py-4 border-b">
+      <h2
+        class="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0"
+      >
+        Todo tracker
+      </h2>
       <Input
         class="max-w-sm"
         placeholder="Filter titles"
