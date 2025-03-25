@@ -18,6 +18,12 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       title: {
         type: Sequelize.STRING,
         unique: false,
@@ -57,6 +63,18 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
+    });
+
+    await queryInterface.addConstraint("DuranTodoTasks", {
+      fields: ["userId"],
+      type: "foreign key",
+      name: "fk_user_id",
+      references: {
+        table: "DuranUsers",
+        field: "_id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   },
 

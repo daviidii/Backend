@@ -3,18 +3,26 @@ import InitializeApp from "./utils/InitializeApp.js";
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import SampleRouter from "./routes/sample-routes.js";
+import cookieParser from "cookie-parser";
 import TodoRouter from "./routes/duran-todo-routes.js";
+import UserRouter from "./routes/duran-user-routes.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Your Nuxt app URL
+    credentials: true,
+  })
+);
 app.use(express.json());
 dotenv.config();
 Logger.setup(app);
 
-// app.use('/sample', SampleRouter);
-app.use("/duran", TodoRouter);
+app.use("/tasks", TodoRouter);
+app.use("/auth", UserRouter);
 
 InitializeApp.init(app)
   .then(() => {

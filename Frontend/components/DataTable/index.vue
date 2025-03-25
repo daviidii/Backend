@@ -67,9 +67,11 @@ const table = useVueTable({
         due_date: null,
       };
       try {
-        const data = await $fetch<TaskProps>("http://localhost:5000/duran", {
+        const data = await $fetch<TaskProps>("http://localhost:5000/tasks", {
           method: "post",
           body: newTask,
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
         });
 
         emit("addRow", data);
@@ -101,11 +103,13 @@ const table = useVueTable({
       editedRowId.value = row.index;
 
       try {
-        await $fetch(`http://localhost:5000/duran/${row.original._id}`, {
+        await $fetch(`http://localhost:5000/tasks/${row.original._id}`, {
           method: "PUT",
           body: {
             [columnId]: value,
           },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
         });
 
         // Create a new object for the updated task
@@ -165,8 +169,10 @@ const table = useVueTable({
         const rowId = row.original._id;
 
         if (rowId) {
-          await $fetch(`http://localhost:5000/duran/${rowId}`, {
+          await $fetch(`http://localhost:5000/tasks/${rowId}`, {
             method: "delete",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
           });
 
           emit("deleteRow", rowId);

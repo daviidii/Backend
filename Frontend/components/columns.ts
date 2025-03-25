@@ -54,6 +54,21 @@ export const taskColumns: ColumnDef<TaskProps>[] = [
     },
   },
   {
+    accessorKey: "collaborators",
+    header: "Collaborators",
+    size: 50,
+    id: "collaborators",
+    cell: (props) => {
+      return h(
+        "p",
+        {
+          class: "text-muted",
+        },
+        "collabrator"
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     id: "status",
@@ -93,6 +108,7 @@ export const taskColumns: ColumnDef<TaskProps>[] = [
     },
     sortingFn: "datetime",
   },
+
   {
     id: "actions",
     enableHiding: false,

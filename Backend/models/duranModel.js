@@ -1,14 +1,18 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
-const DuranModel = sequelize.define(
-  "Duran",
+const DuranTodoModel = sequelize.define(
+  "TodoModel",
   {
     _id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     title: {
       type: DataTypes.STRING,
@@ -32,7 +36,13 @@ const DuranModel = sequelize.define(
   },
   {
     tableName: "DuranTodoTasks",
+    associate: (models) => {
+      DuranTodoModel.belongsTo(models.DuranUsersModel, {
+        foreignKey: "userId",
+        as: "user",
+      });
+    },
   }
 );
 
-export default DuranModel;
+export default DuranTodoModel;

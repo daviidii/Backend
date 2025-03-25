@@ -6,13 +6,14 @@ import {
   updateTask,
   deleteTask,
 } from "../controller/duranTodoController.js";
+import { authenticate } from "../middleware/login-middleware.js";
 
 const router = express.Router();
 
-router.get("/", getAllTasks);
-router.get("/:id", getTaskById);
-router.post("/", createTask);
-router.put("/:id", updateTask);
-router.delete("/:id", deleteTask);
+router.get("/", authenticate, getAllTasks);
+router.get("/:id", authenticate, getTaskById);
+router.post("/", authenticate, createTask);
+router.put("/:id", authenticate, updateTask);
+router.delete("/:id", authenticate, deleteTask);
 
 export default router;

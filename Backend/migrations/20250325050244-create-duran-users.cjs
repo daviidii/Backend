@@ -1,15 +1,16 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add altering commands here.
      *
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable("samples", {
+
+    await queryInterface.createTable("DuranUsers", {
       _id: {
         type: Sequelize.INTEGER,
         unique: true,
@@ -17,37 +18,39 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      username: {
         type: Sequelize.STRING,
-        unique: false,
+        unique: true,
         allowNull: false,
-        primaryKey: false,
         autoIncrement: false,
       },
-      createdBy: {
-        type: Sequelize.INTEGER
+      email: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false,
+        autoIncrement: false,
       },
-      modifiedBy: {
-        type: Sequelize.INTEGER
+      pass: {
+        type: Sequelize.STRING(64),
+        allowNull: false,
       },
       createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
       },
       updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
-      }
-    })
-
+      },
+    });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-  }
+  },
 };

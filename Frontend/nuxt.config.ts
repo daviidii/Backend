@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
+  runtimeConfig: {
+    public: {
+      authApi: "http://localhost:5000/auth",
+      tasksApi: "http://localhost:5000/tasks",
+    },
+  },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   modules: [
@@ -8,6 +15,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
+    "@ant-design-vue/nuxt",
   ],
   shadcn: {
     /**

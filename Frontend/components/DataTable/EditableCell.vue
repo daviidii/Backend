@@ -68,7 +68,7 @@ watch(
       v-if="!isInputActive"
       @click="activateInput"
       class="w-3/4 min-h-10 px-3 cursor-pointer flex items-center hover:bg-muted hover:text-muted-foreground rounded-lg"
-      :class="[input ? '' : 'text-muted capitalize']"
+      :class="[input ? '' : 'text-muted-foreground capitalize']"
     >
       <p>{{ input || props.placeholder }}</p>
     </div>

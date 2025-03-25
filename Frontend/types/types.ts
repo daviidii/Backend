@@ -21,3 +21,16 @@ export interface TaskProps {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface User {
+  _id: string;
+  username: string;
+  email: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken?: string;
+  isAuthorized?: boolean;
+  message?: string;
+}

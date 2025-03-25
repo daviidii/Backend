@@ -1,17 +1,19 @@
-import duranModel from "../models/duranModel.js";
+import DuranTodoModel from "../models/duranModel.js";
 
 // Create new task
 export const createTask = async (req, res) => {
   try {
     const { title, description, status, due_date } = req.body;
+    const userId = req.user._id;
 
     if (!title) {
       return res.status(400).json({ error: "Title must be provided" });
     }
 
     // create the task
-    const task = await duranModel.create({
+    const task = await DuranTodoModel.create({
       title,
+      userId,
       description,
       status: status || "Pending",
       due_date,
@@ -27,8 +29,10 @@ export const createTask = async (req, res) => {
 // Get all tasks
 export const getAllTasks = async (req, res) => {
   try {
-    const tasks = await duranModel.findAll({
+    const userId = req.user._id;
+    const tasks = await DuranTodoModel.findAll({
       order: [["createdAt", "ASC"]],
+      where: { userId },
     });
 
     res.status(200).json(tasks);
@@ -42,8 +46,11 @@ export const getAllTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
   try {
     const taskId = req.params.id;
+    const userId = req.user._id;
 
-    const task = await duranModel.findByPk(taskId);
+    const task = await DuranTodoModel.findOne({
+      where: { _id: taskId, userId },
+    });
 
     if (!task) {
       return res.status(404).json({ error: "Task not found or doesn't exist" });
@@ -59,24 +66,28 @@ export const getTaskById = async (req, res) => {
 // Update a task
 export const updateTask = async (req, res) => {
   try {
+    const userId = req.user._id;
     const taskId = req.params.id;
     const { title, description, status, due_date } = req.body;
 
-    // find task
-    const task = await duranModel.findByPk(taskId);
+    // update task only owned by user
+    const [affectedTask] = await DuranTodoModel.update(
+      {
+        title,
+        description,
+        status,
+        due_date,
+      },
+      { where: { _id: taskId, userId } }
+    );
 
-    if (!task) {
+    if (affectedTask === 0) {
       return res.status(404).json({ error: "Task not found or doesn't exist" });
     }
 
-    task.title = title || task.title;
-    task.description = description || task.description;
-    task.status = status || task.status;
-    task.due_date = due_date || task.due_date;
+    const updatedTask = await DuranTodoModel.findByPk(taskId);
 
-    await task.save(task);
-
-    res.status(200).json(task);
+    res.status(200).json(updatedTask);
   } catch (error) {
     console.error("error >>>", error);
     res.status(500).json({ error: error.message });
@@ -86,18 +97,18 @@ export const updateTask = async (req, res) => {
 // delete a task
 export const deleteTask = async (req, res) => {
   try {
+    const userId = req.user._id;
     const taskId = req.params.id;
 
     // find task
-    const task = await duranModel.findByPk(taskId);
-    if (!task) {
+    const deletedTasks = await DuranTodoModel.destroy({
+      where: { _id: taskId, userId },
+    });
+    if (deletedTasks === 0) {
       return res.status(404).json({ error: "Task not found or doesn't exist" });
     }
 
-    // delete the task
-    await task.destroy();
-
-    res.status(204).send();
+    res.status(204).json({ message: "task deleted successfully" });
   } catch (error) {
     console.error("error >>>", error);
     res.status(500).json({ error: error.message });
